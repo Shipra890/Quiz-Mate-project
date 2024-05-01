@@ -1,3 +1,7 @@
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+}
+
 function classPageMenu(button) {
     var active = [
         "bg-violet-100",
@@ -141,5 +145,130 @@ function createexamModal() {
     } else {
         createexam.classList.remove("hidden");
         createexam.classList.add("block");
+    }
+}
+
+function createQuestionModal(qid) {
+    var title = document.getElementById("createquestiontitle");
+    if (qid === undefined) {
+        title.innerHTML = "Create New Question";
+        document.getElementById("action").value = "createquestion";
+        document.getElementById("question").value = "";
+        document.getElementById("option1").value = "";
+        document.getElementById("option2").value = "";
+        document.getElementById("option3").value = "";
+        document.getElementById("option4").value = "";
+    } else {
+        title.innerHTML = "Edit Question";
+        document.getElementById("action").value = "updatequestion";
+
+        document.getElementById("question").value = document.getElementById(
+            "q" + qid
+        ).innerHTML;
+        document.getElementById("questiontype").value = document.getElementById(
+            "qtype" + qid
+        ).innerHTML;
+        changeQuestionType();
+        if (
+            document.getElementById("qtype" + qid).innerHTML === "SingleMCQ" ||
+            document.getElementById("qtype" + qid).innerHTML === "MultipleMCQ"
+        ) {
+            for (var i = 0; i < 4; i++) {
+                var option = document.getElementsByClassName(qid + "answer")[i]
+                    .innerHTML;
+                document.getElementById("option" + (i + 1)).value = option;
+            }
+        }
+    }
+
+    var createquestion = document.getElementById("createquestionmodal");
+    if (createquestion.classList.contains("block")) {
+        createquestion.classList.remove("block");
+        createquestion.classList.add("hidden");
+    } else {
+        createquestion.classList.remove("hidden");
+        createquestion.classList.add("block");
+    }
+}
+
+function changeQuestionType() {
+    var qtype = document.getElementById("questiontype").value;
+    var truefalseblock = document.getElementById("truefalseblock");
+    var mcqblock = document.getElementById("mcqblock");
+    var subjectiveblock = document.getElementById("subjectiveblock");
+    if (qtype === "SingleMCQ") {
+        for (var i = 1; i < 5; i++) {
+            document
+                .getElementById("option" + i + "iscorrect")
+                .setAttribute("type", "radio");
+            document
+                .getElementById("option" + i + "iscorrect")
+                .setAttribute("name", "optioniscorrect");
+            document.getElementById("option" + i + "iscorrect").required = true;
+            document.getElementById("option" + i).required = true;
+        }
+        truefalseblock.classList.remove("block");
+        truefalseblock.classList.add("hidden");
+        mcqblock.classList.remove("hidden");
+        mcqblock.classList.add("block");
+        subjectiveblock.classList.remove("block");
+        subjectiveblock.classList.add("hidden");
+    } else if (qtype === "MultipleMCQ") {
+        for (var i = 1; i < 5; i++) {
+            document
+                .getElementById("option" + i + "iscorrect")
+                .setAttribute("type", "checkbox");
+            document
+                .getElementById("option" + i + "iscorrect")
+                .setAttribute("name", "option" + i + "iscorrect");
+            document.getElementById(
+                "option" + i + "iscorrect"
+            ).required = false;
+            document.getElementById("option" + i).required = true;
+        }
+        truefalseblock.classList.remove("block");
+        truefalseblock.classList.add("hidden");
+        mcqblock.classList.remove("hidden");
+        mcqblock.classList.add("block");
+        subjectiveblock.classList.remove("block");
+        subjectiveblock.classList.add("hidden");
+    } else if (qtype === "TrueFalse") {
+        truefalseblock.classList.remove("hidden");
+        truefalseblock.classList.add("block");
+        mcqblock.classList.remove("block");
+        mcqblock.classList.add("hidden");
+        subjectiveblock.classList.remove("block");
+        subjectiveblock.classList.add("hidden");
+        for (var i = 1; i < 5; i++) {
+            document.getElementById(
+                "option" + i + "iscorrect"
+            ).required = false;
+            document.getElementById("option" + i).required = false;
+        }
+    } else if (qtype === "Subjective") {
+        truefalseblock.classList.remove("block");
+        truefalseblock.classList.add("hidden");
+        mcqblock.classList.remove("block");
+        mcqblock.classList.add("hidden");
+        subjectiveblock.classList.remove("hidden");
+        subjectiveblock.classList.add("block");
+        for (var i = 1; i < 5; i++) {
+            document.getElementById(
+                "option" + i + "iscorrect"
+            ).required = false;
+            document.getElementById("option" + i).required = false;
+        }
+    }
+}
+
+function deletequestionModal(qid) {
+    var deletequestion = document.getElementById("deletequestionmodal");
+    if (deletequestion.classList.contains("block")) {
+        deletequestion.classList.remove("block");
+        deletequestion.classList.add("hidden");
+    } else {
+        deletequestion.classList.remove("hidden");
+        deletequestion.classList.add("block");
+        document.getElementById("deletequestionid").value = qid;
     }
 }
